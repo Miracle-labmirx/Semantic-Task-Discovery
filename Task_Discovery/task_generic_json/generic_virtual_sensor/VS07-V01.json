@@ -1,0 +1,30 @@
+[
+    {
+        "id": "VirtualSensor:VS07-V01_ThermalEnergy",
+        "type": "Task",
+        "description": "Atrium Supply Thermal Energy.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ThermalEnergy": {
+                "type": "Task",
+                "taskId": "VS04-V01"
+            }
+        },
+        "arguments": {
+            "scope": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VS07-V01",
+        "name": "Atrium Supply Thermal Energy"
+    }
+]

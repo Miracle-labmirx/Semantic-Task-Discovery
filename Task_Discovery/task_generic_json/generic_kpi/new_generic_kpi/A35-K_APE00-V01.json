@@ -1,0 +1,24 @@
+[
+    {
+        "id": "KPI:A35-K:APE00-V01_Annual-Produced-Energy",
+        "type": "Task",
+        "description": "Measure the annual energy produced from the PV unit.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ProducedEnergy": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Energy-Production",
+                "unit": "KWH"
+            }
+        },
+        "taskId": "A35-K:APE00-V01",
+        "name": "Annual Produced Energy"
+    }
+]

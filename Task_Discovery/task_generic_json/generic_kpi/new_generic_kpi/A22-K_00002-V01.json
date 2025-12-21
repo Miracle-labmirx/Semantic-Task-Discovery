@@ -1,0 +1,22 @@
+[
+    {
+        "id": "KPI:A22-K:00002-V01_Actual-Load",
+        "type": "Task",
+        "description": "KPI definition for the actual load of a boiler.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "CumulatedEnergy": {
+                "type": "Task",
+                "taskId": "A22-K:00003-V01"
+            }
+        },
+        "taskId": "A22-K:00002-V01",
+        "name": "Actual Load KPI for Boiler"
+    }
+]

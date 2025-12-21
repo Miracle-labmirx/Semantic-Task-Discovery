@@ -1,0 +1,29 @@
+[
+    {
+        "id": "KPI:A22-K:00006-V01_CO2-Emissions",
+        "type": "Task",
+        "description": "Monthly KPI for the CO2 Emissions of a boiler.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "CumulatedNaturalGasVolumeFlow": {
+                "type": "External",
+                "category": "Offline-Value",
+                "measuresProperty": "Cumulated-Natural-Gas-Volume-Flow",
+                "unit": "m3"
+            },
+            "NaturalGasCo2EmissionFactor": {
+                "type": "External",
+                "category": "Reference-Value",
+                "unit": "kg/m3"
+            }
+        },
+        "taskId": "A22-K:00006-V01",
+        "name": "Monthly KPI for Boiler for CO2 Emissions"
+    }
+]

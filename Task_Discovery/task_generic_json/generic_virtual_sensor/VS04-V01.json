@@ -1,0 +1,54 @@
+[
+        {
+        "id": "VirtualSensor:VS04-V01_Thermal-Energy-RTU",
+        "type": "Task",
+        "description": "Atrium RTU North Supply Thermal Energy.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "AirVelocity_North": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Humidity",
+                "unit": "P1"
+            },
+            "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            },
+            "Supply_Air_Temperature_RTU_North": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Air-Temperature",
+                "unit": "CEL"
+            },
+            "Temp": [
+                {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "Temperature",
+                    "unit": "CEL"
+                }
+            ]
+        },
+        "arguments": {
+            "scope":[
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VS04-V01",
+        "name": "Atrium RTU North Supply Thermal Energy"
+    }
+]

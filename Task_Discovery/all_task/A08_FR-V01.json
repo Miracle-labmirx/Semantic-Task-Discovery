@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Assessment:A08:FR-V01_Thermal-Envelope:Fault-Detection:Report",
+        "type": "Task",
+        "description": "Hourly report for the Thermal envelop fault-detection assessment using simulation data as baseline",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "Fault": {
+                "taskId": "A08:F-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A08:FR-V01",
+        "name": "Hourly report for the Thermal envelope fault-detection assessment"
+    }
+]

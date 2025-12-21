@@ -1,0 +1,26 @@
+[
+    {
+        "id": "KPI:A22-K:00001-V01_Efficiency-Factor:Monthly",
+        "type": "Task",
+        "description": "KPI definition for efficiency factor of a boiler.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "EnergyProduced": {
+                "type": "Task",
+                "taskId": "A22-K:00003-V01"
+            },
+            "PrimaryDeliveredEnergy": {
+                "type": "Task",
+                "taskId": "A22-K:00005-V01"
+            }
+        },
+        "taskId": "A22-K:00001-V01",
+        "name": "Monthly Boiler Efficiency Factor"
+    }
+]

@@ -1,0 +1,36 @@
+[
+    {
+        "id": "KPI:A22-K:00003-V01_Energy-Produced",
+        "type": "Task",
+        "description": "KPI definition for the energy produced of a boiler.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ReturnFlowTemperature": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Return-Temperature",
+                "unit": "ºC"
+            },
+            "SupplyFlowTemperature": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Temperature",
+                "unit": "ºC"
+            },
+            "VolumeFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Sensor_Water-Flow-Rate",
+                "unit": "m³/h"
+            }
+        },
+        "taskId": "A22-K:00003-V01",
+        "name": "Energy Produced by the Boiler"
+    }
+]

@@ -1,0 +1,28 @@
+[
+        {
+        "id": "KPI:A11-K:01-V01_Average-Temperature-Deviation",
+        "type": "Task",
+        "description": "Percentage of the of occupied hours (those during which the building is occupied), in which the operative temperature is outside a specified range, calculated according to the Fanger thermal comfort model.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "tempSensor": {
+                "type": "Device",
+                "category":"Sensor",
+                "measuresProperty": "Temperature",
+                "unit": "CEL"
+            }
+        },
+        "arguments": {
+            "above_thresh": 26,
+            "below_thresh": 20
+        },
+        "taskId": "A11-K:01-V01",
+        "name": "Sensor measuring temperature in Room-1.354"
+    }
+]

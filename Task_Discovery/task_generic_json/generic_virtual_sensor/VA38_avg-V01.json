@@ -1,0 +1,42 @@
+[
+    {
+        "id": "VirtualSensor:VA38_avg-V01_Average-Illuminance",
+        "type": "Task",
+        "description": "Average illuminance from illuminance sensor(s) in a zone",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "Illuminance": 
+                {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "Lighting",
+                    "unit": "LUX"
+                },
+               
+            "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            }
+        },
+        "arguments": {
+            "scope": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VA38_avg-V01",
+        "name": "Average Illuimance Atrium"
+    }
+]

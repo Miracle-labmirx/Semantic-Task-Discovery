@@ -1,0 +1,35 @@
+[
+    {
+        "id": "Assessment:A12-KIE6-V01_IAQ-RH-Classification",
+        "type": "Task",
+        "description": "KPI definition for the indoor air quality based on the Relative humidity, takes the Relative humidity for a defined time periode as input, and determine what category the period are in.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "Humidity": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Humidity",
+                "unit": "P1"
+            }
+        },
+        "arguments": {
+            "categories": {
+                "low_cat_1": 30,
+                "low_cat_2": 25,
+                "low_cat_3": 20,
+                "upper_cat_1": 50,
+                "upper_cat_2": 60,
+                "upper_cat_3": 70
+            },
+            "option": "mean"
+        },
+        "taskId": "A12-KIE6-V01",
+        "name": "IAQ RH concentration"
+    }
+]

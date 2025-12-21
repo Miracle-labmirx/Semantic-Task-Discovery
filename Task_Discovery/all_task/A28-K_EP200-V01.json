@@ -1,0 +1,32 @@
+[
+        {
+        "id": "KPI:A28-K:EP200-V01_Electricity_Use",
+        "type": "Task",
+        "description": "KPI definition for the heating energy use in the AHU, takes as input a timeseries of heating energy use and outputs the sum electricity use over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ElecUse": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Energy-Consumed-Heating-Coil",
+                "unit": "WHR"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:EP200-V01",
+        "name": "Heating Energy Use"
+    }
+]

@@ -1,0 +1,36 @@
+[
+    {
+        "id": "KPI:A35-K:SCR02-V01_Self-Sufficiency",
+        "type": "Task",
+        "description": "Self Consumption determines the amount of energy consumed locally.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ActiveEnergyConsumed": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "ActiveEnergyConsumed",
+                "unit": "WHR"
+            },
+            "ActiveEnergyInjected": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "ActiveEnergyInjected",
+                "unit": "WHR"
+            },
+            "ProducedEnergy": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "ActiveEnergyProduced",
+                "unit": "WHR"
+            }
+        },
+        "taskId": "A35-K:SCR02-V01",
+        "name": "A35 PV Assessment Self Consumption"
+    }
+]

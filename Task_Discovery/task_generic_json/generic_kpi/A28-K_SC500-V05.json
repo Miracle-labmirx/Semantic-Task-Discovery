@@ -1,0 +1,38 @@
+[
+        {
+        "id": "KPI:A28-K:SC500-V05_Water_Based_Heating_Energy_Use",
+        "type": "Task",
+        "description": "KPI definition for the specific heating energy use in the AHU, takes as input a timeseries of heating energy use and the flow rate over the heating coil and outputs the specific heating energy use over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ElecUse": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Energy-Consumed-Heating-Coil",
+                "unit": "WHR"
+            },
+            "SupFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Fan-Flow",
+                "unit": "MQH"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:SC500-V05",
+        "name": "Water Based Heating Energy Use"
+        }
+]

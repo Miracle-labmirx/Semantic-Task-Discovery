@@ -1,0 +1,25 @@
+[
+    {
+        "id": "Assessment:A22-S2-G1-P-V03_Energy-Performance",
+        "type": "Task",
+        "description": "Assessment definition for the energy performance of a boiler.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "EnergyProduced": {
+                "taskId": "A22-K:00003-V01",
+                "type": "Task"
+            },
+            "SpacialContext": {
+                "type": "Building"
+            }
+        },
+        "taskId": "A22-S2-G1-P-V03",
+        "name": "Boiler Energy Performance assessment"
+    }
+]

@@ -1,0 +1,121 @@
+[
+    {
+        "id": "Assessment:A28-S2-G-F-V05:SupPresDevAvg-1",
+        "type": "Task",
+        "description": "Assessments: Determines if any faults are present in the given system",
+        "category": "Assessment",
+        "requires": {
+            "SupFanFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Fan-Flow",
+                "unit": "MQH"
+            },
+            "SupFanOnOff": {
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Supply fan on/off signal",
+                "unit": "Boolean"
+            },
+            "SupFanSignal": {
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Setpoint-Supply-Fan-Control",
+                "unit": "P1"
+            },
+            "SupPres": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Air-Pressure-Supply",
+                "unit": "PAL"
+            },
+            "SupPresSetp": {
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Setpoint-Air-Pressure-Supply",
+                "unit": "PAL"
+            }
+        },
+        "arguments": {
+            "FD_ID": "SupplyPressureDeviationAverageHistoricalInUse1",
+            "HDBscan_grid_max_points": [
+                1000,
+                5000,
+                10000,
+                50000,
+                100000,
+                500000
+            ],
+            "HDBscan_grid_min_cluster_points": [
+                10,
+                20,
+                30,
+                40,
+                50,
+                60,
+                70,
+                80,
+                90,
+                100
+            ],
+            "HDBscan_min_points": [
+                500,
+                1000,
+                2000,
+                3000,
+                4000
+            ],
+            "HDBscan_update": [
+                24,
+                48,
+                72,
+                96,
+                120,
+                144,
+                168,
+                336
+            ],
+            "IQR_maximum_points": [
+                100,
+                200,
+                300,
+                400,
+                500,
+                600,
+                700,
+                800,
+                900,
+                1000
+            ],
+            "IQR_minimum_points": [
+                10,
+                20,
+                30,
+                40,
+                50,
+                60,
+                70,
+                80,
+                90,
+                100
+            ],
+            "IQR_multiplier": 1.5,
+            "data_time_resolution": [
+                5,
+                15,
+                30,
+                60
+            ],
+            "historical_max_time": [
+                30,
+                60,
+                90,
+                120,
+                150,
+                180
+            ]
+        },
+        "taskId": "A28-S2-G-F-V05",
+        "name": "AHU Fault detection"
+    }
+]

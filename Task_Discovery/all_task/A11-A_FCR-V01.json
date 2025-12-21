@@ -1,0 +1,30 @@
+    [
+        {
+            "id": "Assessment:A11-A:FCR-V01_Thermal-Comfort-Report",
+            "type": "Task",
+            "description": "Hourly thermal comfort report based on Fanger method.",
+            "category": "Assessment",
+            "periodicity": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ],
+            "requires": {
+                "reports": {
+                    "taskId": "A11-A:FCC-V02",
+                    "type": "Task"
+                }
+            },
+            "arguments": {
+                "scope": [
+                    "@daily",
+                    "@weekly",
+                    "@monthly",
+                    "@yearly"
+                ]
+            },
+            "taskId": "A11-A:FCR-V01",
+            "name": "Hourly fanger thermal comfort report."
+        }
+    ]

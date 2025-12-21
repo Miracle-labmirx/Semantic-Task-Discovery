@@ -1,0 +1,21 @@
+[
+    {
+        "id": "KPI:A13-K03-V01_Total-Occupancy",
+        "type": "Task",
+        "description": "Total count for occupation estimation at Atrium Center zone.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "Estimates": {
+                "type": "Task",
+                "taskId": "A13-K02-V01"
+            }
+        },
+        "taskId": "A13-K03-V01"
+    }
+]

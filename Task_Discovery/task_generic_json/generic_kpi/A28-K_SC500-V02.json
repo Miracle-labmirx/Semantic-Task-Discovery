@@ -1,0 +1,38 @@
+[
+        {
+        "id": "KPI:A28-K:SC500-V02_Specific-Heating-Energy-Use",
+        "type": "Task",
+        "description": "KPI definition for the specific heating energy use for the AHU, takes as input a timeseries of supply air flow, extracion air flow, and electricity use to heat and outputs the specific electricity use over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "HeatEnergyUse": {
+                "type": "Device",
+                "category": "Sensor",
+                "controlsProperty": "Energy-Consumed-Heating-Coil",
+                "unit": "WHR"
+            },
+            "SupFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Air-Flow-Supply",
+                "unit": "MQH"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:SC500-V02",
+        "name": "Specific Heating Energy Use"
+    }
+]

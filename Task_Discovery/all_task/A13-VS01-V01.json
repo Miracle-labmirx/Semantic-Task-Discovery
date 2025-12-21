@@ -1,0 +1,32 @@
+[
+    {
+        "id": "VirtualSensor:A13-VS01-V01_Occupation-Count",
+        "type": "Task",
+        "description": "Occupation estimate based on entrance and exit counts.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "In": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Occupancy-Count-In",
+                "unit": "int"
+            },
+            "Out": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Occupancy-Count-Out",
+                "unit": "int"
+            }
+        },
+        "arguments": {
+            "count_clear_at": "07:00"
+        },
+        "taskId": "A13-VS01-V01"
+    }
+]

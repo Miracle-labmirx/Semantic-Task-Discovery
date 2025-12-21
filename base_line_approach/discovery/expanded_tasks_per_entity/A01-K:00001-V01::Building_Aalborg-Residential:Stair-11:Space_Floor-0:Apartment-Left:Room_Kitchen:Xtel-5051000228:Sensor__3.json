@@ -1,0 +1,37 @@
+{
+  "id": "KPI:Energy-Use-Intensity",
+  "type": "Task",
+  "description": "KPI definition for Energy Use Intensity (EUI). Takes as input a timeseries of killowatt/killowatt per hour measurements and the area of the physical space in squared meters and outputs the EUI.",
+  "category": "KPI",
+  "periodicity": [
+    "@hourly",
+    "@weekly",
+    "@monthly",
+    "@yearly"
+  ],
+  "requires": {
+    "SpacialContext": {
+      "type": [
+        "Building",
+        "Zone",
+        "Space"
+      ],
+      "area": true
+    },
+    "TotalLoad": {
+      "type": "Device",
+      "category": "Sensor",
+      "measuresProperty": [
+        "Accumulated-Load",
+        "Total-Load"
+      ],
+      "unit": [
+        "KWH",
+        "KWT"
+      ]
+    },
+    "entityId": "Building_Aalborg-Residential:Stair-11:Space_Floor-0:Apartment-Left:Room_Kitchen:Xtel-5051000228:Sensor_Temperature"
+  },
+  "taskId": "A01-K:00001-V01::Building_Aalborg-Residential:Stair-11:Space_Floor-0:Apartment-Left:Room_Kitchen:Xtel-5051000228:Sensor_Temperature",
+  "name": "Energy Use Intensity • Building_Aalborg-Residential:Stair-11:Space_Floor-0:Apartment-Left:Room_Kitchen:Xtel-5051000228:Sensor_Temperature"
+}

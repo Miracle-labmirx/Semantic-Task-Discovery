@@ -1,0 +1,23 @@
+[
+    {
+        "id": "VirtualSensor:A01-VS04_Energy-Consumption",
+        "type": "Task",
+        "description": "Provides hourly energy consumption in KWH.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "EnergyConsumption": 
+                {
+                    "type": "Task",
+                    "taskId": "A01-VS03"
+                }
+            
+        },
+        "taskId": "A01-VS04"
+    }
+]

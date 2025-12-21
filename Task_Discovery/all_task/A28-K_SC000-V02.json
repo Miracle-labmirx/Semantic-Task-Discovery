@@ -1,0 +1,38 @@
+[
+        {
+        "id": "KPI:A28-K:SC000-V02_Max-Supply-Pressure-Deviation",
+        "type": "Task",
+        "description": "KPI definition for the maximum supply pressure deviation in the AHU, takes as input a timeseries of supply pressure and supply pressure setpoints and outputs the maximum supply pressure deviation over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "SupPres": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Air-Pressure-Supply",
+                "unit": "PAL"
+            },
+            "SupPresSetp": {
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Setpoint-Air-Pressure-Supply",
+                "unit": "PAL"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:SC000-V02",
+        "name": "Max Supply Pressure Deviation"
+    }
+]

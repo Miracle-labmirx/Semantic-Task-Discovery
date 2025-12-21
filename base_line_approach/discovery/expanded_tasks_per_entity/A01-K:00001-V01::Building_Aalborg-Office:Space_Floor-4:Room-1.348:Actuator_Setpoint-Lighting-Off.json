@@ -1,0 +1,37 @@
+{
+  "id": "KPI:Energy-Use-Intensity",
+  "type": "Task",
+  "description": "KPI definition for Energy Use Intensity (EUI). Takes as input a timeseries of killowatt/killowatt per hour measurements and the area of the physical space in squared meters and outputs the EUI.",
+  "category": "KPI",
+  "periodicity": [
+    "@hourly",
+    "@weekly",
+    "@monthly",
+    "@yearly"
+  ],
+  "requires": {
+    "SpacialContext": {
+      "type": [
+        "Building",
+        "Zone",
+        "Space"
+      ],
+      "area": true
+    },
+    "TotalLoad": {
+      "type": "Device",
+      "category": "Sensor",
+      "measuresProperty": [
+        "Accumulated-Load",
+        "Total-Load"
+      ],
+      "unit": [
+        "KWH",
+        "KWT"
+      ]
+    },
+    "entityId": "Building_Aalborg-Office:Space_Floor-4:Room-1.348:Actuator_Setpoint-Lighting-Off"
+  },
+  "taskId": "A01-K:00001-V01::Building_Aalborg-Office:Space_Floor-4:Room-1.348:Actuator_Setpoint-Lighting-Off",
+  "name": "Energy Use Intensity • Building_Aalborg-Office:Space_Floor-4:Room-1.348:Actuator_Setpoint-Lighting-Off"
+}

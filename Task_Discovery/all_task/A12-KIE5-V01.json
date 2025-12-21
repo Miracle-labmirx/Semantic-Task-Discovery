@@ -1,0 +1,34 @@
+    [
+        {
+            "id": "Assessment:A12-KIE5-V01_IAQ-CO2-Classification",
+            "type": "Task",
+            "description": "KPI definition for the indoor air quality based on the CO2 concentration, takes the CO2 concentration for at defined time periode as input, and determine what category the period are in.",
+            "category": "Assessment",
+            "periodicity": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ],
+            "requires": {
+                "CO2": {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "CO2",
+                    "unit": "59"
+                }
+            },
+            "arguments": {
+                "categories": {
+                    "cat_1": 550,
+                    "cat_2": 800,
+                    "cat_3": 1350,
+                    "cat_4": 1350,
+                    "outside": 450
+                },
+                "option": "mean"
+            },
+            "taskId": "A12-KIE5-V01",
+            "name": "IAQ CO2 concentration category for Floor 3, Room 1.257"
+        }
+    ]

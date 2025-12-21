@@ -1,0 +1,43 @@
+[
+    {
+        "id": "KPI:A07:K01-V01_Window-Fault",
+        "type": "Task",
+        "description": "Hourly report for the Thermal envelop fault-detection assessment using similar buildings as baseline for the Apartment 40",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "HeatingSystem": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Total-Consumption",
+                "unit": "bool"
+            },
+            "IAQ_CO2": {
+                "type": "Task",
+                "taskId": "A12-KIE5-V01"
+            },
+            "IAQ_RH": {
+                "type": "Task",
+                "taskId": "A12-KIE6-V01"
+            },
+            "ThermalComfort": {
+                "type": "Task",
+                "taskId": "A11-A:FCC-V02"
+            },
+            "Windows": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Current-Position",
+                "deviceModel": "Shelly Plus 2PM",
+                "unit": "P1"
+            }
+        },
+        "taskId": "A07:K01-V01",
+        "name": "Assess the if windows are open when they are expected to be closed, over a selected time aggregation. "
+    }
+]

@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Milan-MultiApartment-2:Stair-5:Boiler:Assessment-Instance_Load-Perfornamce",
+        "type": "Task",
+        "description": "Assessment definition for the load performance of a boiler.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ActualLoad": {
+                "taskId": "A22-K:00002-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A22-S2-G1-P-V02",
+        "name": "Load Performance assessent of Boiler"
+    }
+]

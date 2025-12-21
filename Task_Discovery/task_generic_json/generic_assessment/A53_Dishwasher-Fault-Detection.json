@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Assessment:A53_Dishwasher-Fault-Detection",
+        "type": "Task",
+        "description": "Detects anomalies through the energy consumption of dishwasher devices.",
+        "category": "Assessment",
+        "periodicity": "@daily",
+        "requires": {
+            "energy_sensor": {
+                "type": "Device",
+                "category": "Dishwasher"
+            },
+            "target_device": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "ActiveEnergyConsumed"
+            }
+        },
+        "taskId": "A53",
+        "name": "Dishwasher Anomaly Detection Task"
+    }
+]

@@ -1,0 +1,50 @@
+[
+        {
+        "id": "KPI:A28-K:SC500-V04_Specific_Fan_Power",
+        "type": "Task",
+        "description": "KPI definition for the specific fan power in the AHU, takes as input a timeseries of fan power and fan flow outputs the sum specific fan power over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ExtFanFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Exhaust-Fan-Flow",
+                "unit": "MQH"
+            },
+            "ExtFanPower": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Exhaust-Fan-Power",
+                "unit": "KWT"
+            },
+            "SupFanFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Fan-Flow",
+                "unit": "MQH"
+            },
+            "SupFanPower": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Fan-Power",
+                "unit": "KWT"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:SC500-V04",
+        "name": "Specific Fan Power"
+    }
+]

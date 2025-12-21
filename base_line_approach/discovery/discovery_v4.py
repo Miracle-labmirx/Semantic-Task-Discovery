@@ -1,7 +1,7 @@
 import requests
 import json
 #from notes import dict_to_node, print_prefix_tree, load_from_json, PrefixTree, match_task_requirements, load_ids_and_insert_into_tree, find_and_print_nodes_with_substring
-from match_tasks_generic import PrefixTree, load_ids_and_insert_into_tree, RuleSet, match_tasks_with_rules
+from match_tasks_generic import PrefixTree, load_ids_and_insert_into_tree, match_task_requirements, print_prefix_tree
 
 # To load it:
 # print("Loading data....")
@@ -30,18 +30,9 @@ from match_tasks_generic import PrefixTree, load_ids_and_insert_into_tree, RuleS
 # match_task_requirements(prefix_tree.root, "./json_files/EUI_task.json")
 #-------------------------------------------------------------------------------------------------------------------
 
-strict_rules = RuleSet(
-    name="strict_building_rules",
-    location_patterns=[r"\b(Building|Zone|Space)\b"],
-    entity_patterns=[r"\bSensor\b"],
-    measure_patterns=[r"\b(Accumulated[-_ ]?Load|Total[-_ ]?Load)\b"],
-    require_all=True,   # ensures all rule categories must match
-    verbose=True
-)
-strict_rules.compile()
 
 prefix_tree = PrefixTree()
 load_ids_and_insert_into_tree("/caml/standardized_sato_device.xlsx", prefix_tree, id_column="id")
-
+# print_prefix_tree(prefix_tree.root, "")
 # Run matcher – Sato is only generated when *all rules* match
-match_tasks_with_rules(prefix_tree.root, "./json_files/EUI_task.json", strict_rules)
+match_task_requirements(prefix_tree.root, "./json_files/EUI_task.json")

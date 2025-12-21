@@ -1,0 +1,26 @@
+[
+    {
+        "id": "KPI:A22-K:00004-V01_Full-Load-Hours",
+        "type": "Task",
+        "description": "Monthly KPI for the full load hours of a boiler.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ActualLoad": {
+                "type": "Task",
+                "taskId": "A22-K:00002-V01"
+            },
+            "EnergyProduced": {
+                "type": "Task",
+                "taskId": "A22-K:00003-V01"
+            }
+        },
+        "taskId": "A22-K:00004-V01",
+        "name": "Monhtly KPI for Full Load Hours of Boiler"
+    }
+]

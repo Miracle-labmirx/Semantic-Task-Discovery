@@ -1,0 +1,30 @@
+[
+    {
+        "id": "KPI:A35-K:SCR00-V01_Self-Comsumption-of-Renewables",
+        "type": "Task",
+        "description": "Measure the energy produced by the PV unit self-consumed locally, giving insight into the dimensioning of the PV unit.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ActiveEnergyInjected": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Grid-Feed-in",
+                "unit": "KWH"
+            },
+            "ProducedEnergy": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Energy-Production",
+                "unit": "KWH"
+            }
+        },
+        "taskId": "A35-K:SCR00-V01",
+        "name": "Self-Comsumption of Renewables"
+    }
+]

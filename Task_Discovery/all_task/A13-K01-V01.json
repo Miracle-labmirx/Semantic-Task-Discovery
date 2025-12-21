@@ -1,0 +1,23 @@
+[
+    {
+        "id": "VirtualSensor:A13-K01-V01_Off-Hours-Average-Device-Count",
+        "type": "Task",
+        "description": "Average device count identified in off-hours.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "AP": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Device-Count",
+                "unit": "int"
+            }
+        },
+        "taskId": "A13-K01-V01"
+    }
+]

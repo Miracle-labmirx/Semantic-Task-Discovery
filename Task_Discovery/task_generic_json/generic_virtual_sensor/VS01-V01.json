@@ -1,0 +1,43 @@
+[
+        {
+        "id": "VirtualSensor:VS01-V01_Average-Temperature",
+        "type": "Task",
+        "description": "Average of Temperature sensors at 1.2m high.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            },
+            "Temp": [
+                {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "Temperature",
+                    "unit": "CEL"
+                }
+
+            ]
+        },
+        "arguments": {
+            "scope":  [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VS01-V01",
+        "name": "Average Temperature Atrium 2nd floor"
+    }
+]

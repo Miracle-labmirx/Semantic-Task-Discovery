@@ -1,0 +1,42 @@
+[
+     {
+        "id": "VirtualSensor:VS11-V01_Average-CO2",
+        "type": "Task",
+        "description": "Average of CO2 sensors at different high.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "CO2": [
+                {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "CO2",
+                    "unit": 59
+                }
+            ],
+            "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            }
+        },
+        "arguments": {
+            "scope": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VS11-V01",
+        "name": "Average CO2"
+    }
+]

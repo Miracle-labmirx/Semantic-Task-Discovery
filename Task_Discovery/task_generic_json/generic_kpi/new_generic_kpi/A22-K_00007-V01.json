@@ -1,0 +1,27 @@
+[
+    {
+        "id": "KPI:A22-K:00007-V01_Energy-Costs",
+        "type": "Task",
+        "description": "Monthly KPI for the natural gas energy costs of a boiler.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "NaturalGasPrice": {
+                "type": "External",
+                "category": "Reference-Value",
+                "unit": "eur/kWh"
+            },
+            "PrimaryDeliveredEnergy": {
+                "type": "Task",
+                "taskId": "A22-K:00005-V01"
+            }
+        },
+        "taskId": "A22-K:00007-V01",
+        "name": "Monthly KPI Boiler Energy Costs"
+    }
+]

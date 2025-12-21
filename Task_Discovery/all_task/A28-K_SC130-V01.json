@@ -1,0 +1,69 @@
+[
+        {
+        "id": "KPI:A28-K:SC130-V01_Heat_Exchanger_Efficiency",
+        "type": "Task",
+        "description": "KPI definition for the heat exchanger efficiency in the rotary heat exchanger, takes as input a timeseries of supply and extraction flow and air temperature and outputs the the deviation between the real and theoratical possiple heat exchanger efficiency over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ExtFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Exhaust-Fan-Flow",
+                "unit": "MQH"
+            },
+            "ExtTemp": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-Extraction",
+                "unit": "CEL"
+            },
+            "SupFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Fan-Flow",
+                "unit": "MQH"
+            },
+            "SupTemp": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-Air-Supply",
+                "unit": "CEL"
+            },
+            "SupTempSP": {
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Setpoint-Temperature-Air-Supply",
+                "unit": "CEL"
+            },
+            "TempAfterHE": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-HE",
+                "unit": "CEL"
+            },
+            "TempIntake": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-Intake",
+                "unit": "CEL"
+            }
+        },
+        "arguments": {
+            "c_p": 1.006,
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:SC130-V01",
+        "name": "Heat Exchanger Efficiency"
+        }
+]

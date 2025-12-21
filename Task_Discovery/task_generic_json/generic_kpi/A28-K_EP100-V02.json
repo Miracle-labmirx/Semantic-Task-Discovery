@@ -1,0 +1,32 @@
+[
+    {
+        "id": "KPI:A28-K:EP100-V02_Fan_Electricity_Use",
+        "type": "Task",
+        "description": "KPI definition for the electricity use for the fan, takes as input a timeseries of electricity use and outputs the sum electricity use over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ElecUse": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Exhaust-Fan-Power",
+                "unit": "KWT"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:EP100-V02",
+        "name": "Fan Electricity Use"
+    }
+]

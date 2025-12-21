@@ -1,0 +1,28 @@
+[
+    {
+        "id": "Assessment:A13-A:OR-V01_Occupation-Report",
+        "type": "Task",
+        "description": "A13 Occupancy assessment report.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "OccupationCount": {
+                "taskId": "A13-K03-V01",
+                "type": "Task"
+            },
+            "OccupationPercentage": {
+                "taskId": "A13-V01",
+                "type": "Task"
+            }
+        },
+        "arguments": {
+            "warning_threshold": 0.8
+        },
+        "taskId": "A13-A:OR-V01"
+    }
+]

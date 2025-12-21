@@ -1,0 +1,26 @@
+[
+    {
+        "id": "KPI:A11-K:02-V01_Percentage-Outside-Comfort",
+        "type": "Task",
+        "description": "Percentage of time outside of thermal comfort range.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "occupation_hours": {
+                "type": "Task",
+                "taskId": "A13-K04-V01"
+            },
+            "temp_dev": {
+                "type": "Task",
+                "taskId": "A11-K:01-V01"
+            }
+        },
+        "taskId": "A11-K:02-V01",
+        "name": "Percentage of time outside of thermal comfort range in Atrium zone of FCUL Library"
+    }
+]

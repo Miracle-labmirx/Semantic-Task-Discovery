@@ -1,0 +1,73 @@
+[
+    {
+        "id": "Service:S34-C-G-S04_Heat-Exchanger-Efficiency-Degradation",
+        "type": "Task",
+        "description": "Heat Exchanger Efficiency Degradation of the AHU",
+        "category": "Service",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "FlowExh": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Exhaust-Fan-Flow",
+                "unit": "MQH"
+            },
+            "FlowSup": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Supply-Fan-Flow",
+                "unit": "MQH"
+            },
+            "HCOpening": {
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Position-Heating-Coil-Motorvalve",
+                "unit": "P1"
+            },
+            "HERotSignal": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Rotation-Speed",
+                "unit": "P1"
+            },
+            "TempExh": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Exhaust-Fan-Temperature",
+                "unit": "CEL"
+            },
+            "TempExt": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-Extraction",
+                "unit": "CEL"
+            },
+            "TempIntake": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-Intake",
+                "unit": "CEL"
+            },
+            "TempSup": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-Air-Supply",
+                "unit": "CEL"
+            },
+            "TempSupSP": {
+                "id": "Aalborg-Office:HVAC:Actuator_Setpoint-Temperature-Air-Supply",
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Setpoint-Temperature-Air-Supply",
+                "unit": "CEL"
+            }
+        },
+        "taskId": "S34-C-G-S04",
+        "name": "Heat Exchanger Efficiency Degradation"
+    }
+]

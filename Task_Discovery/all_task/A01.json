@@ -1,0 +1,30 @@
+[
+    {
+        "id": "Assessment:A01_Whole-Building-Energy",
+        "type": "Task",
+        "description": "Takes as input a EUI and the building category. Every day it compares the EUI with the reference values from buildings of the same category.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            },
+            "energy_use_intensity": {
+                "taskId": "A01-K:00001-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A01",
+        "name": "Whole Building Energy assessment."
+    }
+]

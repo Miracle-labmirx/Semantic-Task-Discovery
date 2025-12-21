@@ -1,0 +1,26 @@
+[
+    {
+        "id": "KPI:A11-K:01-V02_Average-Temperature-Deviation",
+        "type": "Task",
+        "description": "Average temperature deviation from a comfort range.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "tempSensor": {
+                "taskId": "VS02-V01",
+                "type": "Task"
+            }
+        },
+        "arguments": {
+            "above_thresh": 25,
+            "below_thresh": 20
+        },
+        "taskId": "A11-K:01-V02",
+        "name": "Hourly Average temperature deviation in Atrium zone of FCUL Library"
+    }
+]

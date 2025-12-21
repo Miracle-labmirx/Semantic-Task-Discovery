@@ -1,0 +1,31 @@
+[
+    {
+        "id": "KPI:A13-K02-V01_Occupancy-Estimate",
+        "type": "Task",
+        "description": "Estimate of the number of people connected to an access point.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "AP": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Device-Count",
+                "unit": "int"
+            },
+            "Baseline": {
+                "type": "Task",
+                "taskId": "A13-K01-V01"
+            }
+        },
+        "arguments": {
+            "avg_per_person": 0.95,
+            "device_rate_per_person": 1.8
+        },
+        "taskId": "A13-K02-V01"
+    }
+]

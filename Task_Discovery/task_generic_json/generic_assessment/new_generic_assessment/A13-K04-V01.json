@@ -1,0 +1,25 @@
+[
+    {
+        "id": "Assessment:A13-K04-V01_Occupation-Status",
+        "type": "Task",
+        "description": "Occupancy indicator (0 or 1).",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "estimate": {
+                "taskId": "A13-K02-V01",
+                "type": "Task"
+            }
+        },
+        "unit": "bool",
+        "arguments": {
+            "threshold": 0.02
+        },
+        "taskId": "A13-K04-V01"
+    }
+]

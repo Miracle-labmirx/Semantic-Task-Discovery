@@ -1,0 +1,603 @@
+//Establish Relationship Between Building and Space
+:param bId => 'urn:ngsi-ld:Building:Lisbon-FCUL-Library';
+:param spaceIds =>['urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-1', 'urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-2'];
+//create if misssing then relate
+MERGE (b:Building{id:$bId})
+WITH b, $spaceIds AS ids
+UNWIND ids AS sId
+MERGE (s:Space{id:sId})
+MERGE (b)-[:hasSpace]->(s)
+MERGE (s)-[:isSpaceOf]->(b)
+
+//Establish Relationship Between Floor1 and Room-N1 and Room-S1
+:param sId => 'urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-1';
+:param subSpaceIds =>['urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-1:Room-N1', 'urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-1:Room-S1'];
+//create if misssing then relate
+MERGE (s:Space{id:$sId})
+WITH s, $subSpaceIds AS ids
+UNWIND ids AS ssId
+MERGE (sp:Space{id:ssId})
+MERGE (s)-[:hasSpace]->(sp)
+MERGE (sp)-[:isSpaceOf]->(s)
+
+//Establish Relationship Between Floor2 and Room-3_24 and Room-3_3
+:param sId => 'urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-2';
+:param subSpaceIds =>['urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-2:Room-Office_3_24', 'urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-2:Room-Office_3_3'];
+//create if misssing then relate
+MERGE (s:Space{id:$sId})
+WITH s, $subSpaceIds AS ids
+UNWIND ids AS ssId
+MERGE (sp:Space{id:ssId})
+MERGE (s)-[:hasSpace]->(sp)
+MERGE (sp)-[:isSpaceOf]->(s)
+
+//Establish Relationship Between Building and Zone
+:param bId => 'urn:ngsi-ld:Building:Lisbon-FCUL-Library';
+:param zId =>'urn:ngsi-ld:Zone:Lisbon-FCUL-Library:Atrium';
+//create both direction without duplicates
+MATCH(b:Building{id:$bId})
+MATCH(z:Zone{id:$zId})
+MERGE (b)-[:hasZone]->(z)
+MERGE (z)-[:isZoneOf]->(b)
+
+// Establish Relationship Between space and zones
+:param sId => 'urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-1';
+:param zoneIds => [
+  'urn:ngsi-ld:Zone:Lisbon-FCUL-Library:Floor-1:Atrium_Center',
+  'urn:ngsi-ld:Zone:Lisbon-FCUL-Library:Floor-1:Atrium_N',
+  'urn:ngsi-ld:Zone:Lisbon-FCUL-Library:Floor-1:Atrium_S',
+  'urn:ngsi-ld:Zone:Lisbon-FCUL-Library:Floor-1:Atrium_W'
+];
+
+// create if missing then relate
+MERGE (s:Space {id: $sId})
+WITH s, $zoneIds AS ids
+UNWIND ids AS zId
+MERGE (z:Zone {id: zId})
+MERGE (s)-[:hasZone]->(z)
+MERGE (z)-[:isZoneOf]->(s);
+
+// Establish Relationship Between a space and a Zone
+:param sId => 'urn:ngsi-ld:Space:Lisbon-FCUL-Library:Floor-2';
+:param zId => 'urn:ngsi-ld:Zone:Lisbon-FCUL-Library:Floor-2:Atrium_Up';
+
+// create both directions without duplicates
+MATCH (s:Space {id: $sId})
+MATCH (z:Zone  {id: $zId})
+MERGE (s)-[:hasZone]->(z)
+MERGE (z)-[:isZoneOf]->(s);
+
+
+Look from this code, Do not touch or update any of the task instances ,
+ that is task with categories KPI-Instance, Assessment-Instance, Service-Instance, VirtualSensor-Instance,
+Do not update these nodes even if the uploaded generic task version have same taskIds, just leave the task instances in their original form. 
+Please, for already existing generic task version for those with task categories without instances for example task with just category KPI, Assessment , Service, Virtual Sensor, 
+I want you to overide or update with the uploaded json files.
+
+List all distinctive task IDs
+MATCH (t:Task)
+WHERE t.category IN ['KPI', 'Assessment', 'Service', 'VirtualSensor']
+RETURN DISTINCT t.taskId, t.category, t.label
+ORDER BY t.category, t.taskId;
+
+Task discovery
+// Generic tasks (KPI, Assessment, Service, VirtualSensor)
+// + whether they have instances
+MATCH (gen:Task)
+WHERE gen.category IN ['KPI', 'Assessment', 'Service', 'VirtualSensor']
+  AND gen.taskId IS NOT NULL
+
+// look for instances with the same taskId
+OPTIONAL MATCH (inst:Task)
+WHERE inst.category IN [
+        'KPI-Instance',
+        'Assessment-Instance',
+        'Service-Instance',
+        'VirtualSensor-Instance'
+      ]
+  AND inst.taskId IS NOT NULL
+  AND trim(inst.taskId) = trim(gen.taskId)
+
+// aggregate instances and compute hasInstance
+WITH gen, collect(DISTINCT inst) AS instances
+WITH gen, size(instances) > 0 AS hasInstance
+WHERE hasInstance = false   // keep ONLY generics with NO instances
+
+// follow their :requires edges
+OPTIONAL MATCH (gen)-[:requires]->(reqNode)
+RETURN
+  trim(gen.taskId)              AS genericTaskId,
+  gen.category                  AS genericCategory,
+  coalesce(gen.label, gen.name) AS genericName,
+  hasInstance,                  // will be false for all returned rows
+  collect(DISTINCT reqNode)     AS requires
+ORDER BY genericTaskId;
+
+-------------------------------------------------------------------
+List devices contained in a Building
+MATCH (b:Building {id: 'urn:ngsi-ld:Building:Aalborg-Office'})
+OPTIONAL MATCH (b)-[:contains*1..4]->(d1:Device)
+OPTIONAL MATCH (b)<-[:isContainedIn*1..4]-(d2:Device)
+WITH collect(DISTINCT d1) + collect(DISTINCT d2) AS devs
+UNWIND devs AS d
+RETURN DISTINCT
+  d.id          AS deviceId,
+  labels(d)     AS labels,
+  properties(d) AS deviceProps
+ORDER BY deviceId;
+-----------------------------------------------------
+
+MATCH (d:Device)
+OPTIONAL MATCH (d)-[:isContainedIn]->(s:Space)
+OPTIONAL MATCH (d)-[:isContainedIn]->(z:Zone)
+OPTIONAL MATCH (d)-[:isContainedIn]->(bDirect:Building)
+
+// From space → building
+OPTIONAL MATCH (s)-[:isSpaceOf|hasSpace]->(bFromSpace:Building)
+
+// From zone → building (if zones link directly to buildings)
+OPTIONAL MATCH (z)-[:isZoneOf|hasZone]->(bFromZone:Building)
+
+WITH
+  d,
+  s,
+  z,
+  coalesce(bDirect, bFromSpace, bFromZone) AS bFinal
+
+WHERE bFinal.id = 'urn:ngsi-ld:Building:Aalborg-Office'
+
+RETURN DISTINCT
+  d.id AS device_id,
+  CASE WHEN s IS NOT NULL THEN s.id ELSE NULL END AS space_id,
+  CASE WHEN z IS NOT NULL THEN z.id ELSE NULL END AS zone_id,
+  bFinal.id AS building_id
+ORDER BY device_id;
+
+-------------------------------------------------------------------
+Query that finds all devices associated to their Topological Containment
+
+MATCH (d:Device)
+OPTIONAL MATCH (d)-[:isContainedIn]->(s1:Space)
+OPTIONAL MATCH (d)<-[:contains]-(s2:Space)
+OPTIONAL MATCH (d)-[:isContainedIn]->(z1:Zone)
+OPTIONAL MATCH (d)<-[:contains]-(z2:Zone)
+OPTIONAL MATCH (d)-[:isContainedIn]->(b1:Building)
+OPTIONAL MATCH (d)<-[:contains]-(b2:Building)
+
+WITH
+  d,
+  coalesce(s1, s2) AS s,      // final Space directly linked to device (if any)
+  coalesce(z1, z2) AS z,      // final Zone directly linked to device (if any)
+  b1, b2
+
+// Space → Building
+OPTIONAL MATCH (s)-[:isSpaceOf|hasSpace]->(bFromSpace:Building)
+
+// Zone → Space (zones and spaces linked via hasZone / isZoneOf)
+OPTIONAL MATCH (z)-[:hasZone|isZoneOf]->(sFromZone:Space)
+
+// ZoneSpace → Building
+OPTIONAL MATCH (sFromZone)-[:isSpaceOf|hasSpace]->(bFromZSpace:Building)
+
+WITH
+  d,
+  s,
+  z,
+  sFromZone,
+  coalesce(b1, b2, bFromSpace, bFromZSpace) AS bFinal
+
+WHERE bFinal.id = 'urn:ngsi-ld:Building:Lisbon-FCUL-Library'
+
+// Choose the Space to report:
+//  - if device is directly in a Space → use that
+//  - else if device is only in a Zone → use the Space linked to that Zone
+WITH
+  d,
+  coalesce(s, sFromZone) AS sFinal,
+  z,
+  bFinal
+
+RETURN DISTINCT
+  d.id AS device_id,
+  CASE WHEN sFinal IS NOT NULL THEN sFinal.id ELSE NULL END AS space_id,
+  CASE WHEN z IS NOT NULL THEN z.id ELSE NULL END AS zone_id,
+  bFinal.id AS building_id
+ORDER BY device_id;
+-----------------------------------------------------------------
+
+Modified Version:
+
+Task discovery
+// Generic tasks (KPI, Assessment, Service, VirtualSensor)
+// + whether they have instances
+MATCH (gen:Task)
+WHERE gen.category IN ['KPI', 'Assessment', 'Service', 'VirtualSensor']
+  AND gen.taskId IS NOT NULL
+
+// look for instances with the same taskId
+OPTIONAL MATCH (inst:Task)
+WHERE inst.category IN [
+        'KPI-Instance',
+        'Assessment-Instance',
+        'Service-Instance',
+        'VirtualSensor-Instance'
+      ]
+  AND inst.taskId IS NOT NULL
+  AND trim(inst.taskId) = trim(gen.taskId)
+
+// aggregate instances and compute hasInstance
+WITH gen, collect(DISTINCT inst) AS instances
+WITH gen, size(instances) > 0 AS hasInstance
+WHERE hasInstance = false   // keep ONLY generics with NO instances
+
+// follow their :requires edges
+OPTIONAL MATCH (gen)-[:requires]->(reqNode)
+RETURN
+  trim(gen.taskId)              AS genericTaskId,
+  gen.category                  AS genericCategory,
+  coalesce(gen.label, gen.name) AS genericName,
+  hasInstance,                  // will be false for all returned rows
+  collect(DISTINCT reqNode)     AS requires
+ORDER BY genericTaskId;
+
+-------------------------------------------------------------------
+List devices contained in a Building
+MATCH (b:Building {id: 'urn:ngsi-ld:Building:Aalborg-Office'})
+OPTIONAL MATCH (b)-[:contains*1..4]->(d1:Device)
+OPTIONAL MATCH (b)<-[:isContainedIn*1..4]-(d2:Device)
+WITH collect(DISTINCT d1) + collect(DISTINCT d2) AS devs
+UNWIND devs AS d
+RETURN DISTINCT
+  d.id          AS deviceId,
+  labels(d)     AS labels,
+  properties(d) AS deviceProps
+ORDER BY deviceId;
+-----------------------------------------------------
+
+MATCH (d:Device)
+OPTIONAL MATCH (d)-[:isContainedIn]->(s:Space)
+OPTIONAL MATCH (d)-[:isContainedIn]->(z:Zone)
+OPTIONAL MATCH (d)-[:isContainedIn]->(bDirect:Building)
+
+// From space → building
+OPTIONAL MATCH (s)-[:isSpaceOf|hasSpace]->(bFromSpace:Building)
+
+// From zone → building (if zones link directly to buildings)
+OPTIONAL MATCH (z)-[:isZoneOf|hasZone]->(bFromZone:Building)
+
+WITH
+  d,
+  s,
+  z,
+  coalesce(bDirect, bFromSpace, bFromZone) AS bFinal
+
+WHERE bFinal.id = 'urn:ngsi-ld:Building:Aalborg-Office'
+
+RETURN DISTINCT
+  d.id AS device_id,
+  CASE WHEN s IS NOT NULL THEN s.id ELSE NULL END AS space_id,
+  CASE WHEN z IS NOT NULL THEN z.id ELSE NULL END AS zone_id,
+  bFinal.id AS building_id
+ORDER BY device_id;
+
+-------------------------------------------------------------------
+Query that finds all devices associated to their Topological Containment
+
+MATCH (d:Device)
+OPTIONAL MATCH (d)-[:isContainedIn]->(s1:Space)
+OPTIONAL MATCH (d)<-[:contains]-(s2:Space)
+OPTIONAL MATCH (d)-[:isContainedIn]->(z1:Zone)
+OPTIONAL MATCH (d)<-[:contains]-(z2:Zone)
+OPTIONAL MATCH (d)-[:isContainedIn]->(b1:Building)
+OPTIONAL MATCH (d)<-[:contains]-(b2:Building)
+
+WITH
+  d,
+  coalesce(s1, s2) AS s,      // final Space directly linked to device (if any)
+  coalesce(z1, z2) AS z,      // final Zone directly linked to device (if any)
+  b1, b2
+
+// Space → Building
+OPTIONAL MATCH (s)-[:isSpaceOf|hasSpace]->(bFromSpace:Building)
+
+// Zone → Space (zones and spaces linked via hasZone / isZoneOf)
+OPTIONAL MATCH (z)-[:hasZone|isZoneOf]->(sFromZone:Space)
+
+// ZoneSpace → Building
+OPTIONAL MATCH (sFromZone)-[:isSpaceOf|hasSpace]->(bFromZSpace:Building)
+
+WITH
+  d,
+  s,
+  z,
+  sFromZone,
+  coalesce(b1, b2, bFromSpace, bFromZSpace) AS bFinal
+
+WHERE bFinal.id = 'urn:ngsi-ld:Building:Lisbon-FCUL-Library'
+
+// Choose the Space to report:
+//  - if device is directly in a Space → use that
+//  - else if device is only in a Zone → use the Space linked to that Zone
+WITH
+  d,
+  coalesce(s, sFromZone) AS sFinal,
+  z,
+  bFinal
+
+RETURN DISTINCT
+  d.id AS device_id,
+  CASE WHEN sFinal IS NOT NULL THEN sFinal.id ELSE NULL END AS space_id,
+  CASE WHEN z IS NOT NULL THEN z.id ELSE NULL END AS zone_id,
+  bFinal.id AS building_id
+ORDER BY device_id;
+
+
+
+// 1) Generic tasks
+MATCH (gen:Task)
+WHERE gen.category IN ['KPI', 'Assessment', 'Service', 'VirtualSensor']
+  AND gen.taskId IS NOT NULL
+
+// 2) Find instances with the same taskId
+OPTIONAL MATCH (inst:Task)
+WHERE inst.category IN [
+        'KPI-Instance',
+        'Assessment-Instance',
+        'Service-Instance',
+        'VirtualSensor-Instance'
+      ]
+  AND inst.taskId IS NOT NULL
+  AND trim(inst.taskId) = trim(gen.taskId)
+
+// Collect instances and compute hasInstance (without filtering them out)
+WITH gen, collect(DISTINCT inst) AS instancesRaw
+// remove NULLs from instances
+WITH
+  gen,
+  [i IN instancesRaw WHERE i IS NOT NULL] AS instances
+WITH
+  gen,
+  instances,
+  size(instances) > 0 AS hasInstance
+
+// 3) Requirements (direct + from required tasks)
+OPTIONAL MATCH (gen)-[:requires]->(tgtTask:Task)
+OPTIONAL MATCH (gen)-[:requires]->(req1:Requirement)
+OPTIONAL MATCH (tgtTask)-[:requires]->(req2:Requirement)
+
+WITH
+  gen,
+  instances,
+  hasInstance,
+  collect(DISTINCT trim(tgtTask.taskId)) AS requiresTaskIds,
+  collect(
+    DISTINCT {
+      key: req1.key,
+      fromTaskId: trim(gen.taskId)
+    }
+  ) AS directReqInfo,
+  collect(
+    DISTINCT {
+      key: req2.key,
+      fromTaskId: trim(tgtTask.taskId)
+    }
+  ) AS nestedReqInfo
+
+// 4) Topology via reqAs* chains from instances
+//    For tasks with no instances, we UNWIND [NULL] so we still keep a row.
+WITH
+  gen,
+  instances,
+  hasInstance,
+  requiresTaskIds,
+  directReqInfo,
+  nestedReqInfo,
+  CASE
+    WHEN size(instances) > 0 THEN instances
+    ELSE [NULL]
+  END AS instList
+
+UNWIND instList AS inst
+
+// From each instance, walk along relationships whose type CONTAINS 'reqAs'
+// until we hit a Building / Space / Zone
+OPTIONAL MATCH p = (inst)-[rels*1..6]-(anchor)
+WHERE inst IS NOT NULL
+  AND all(rel IN rels WHERE type(rel) CONTAINS 'reqAs')
+  AND (anchor:Building OR anchor:Space OR anchor:Zone)
+
+WITH
+  gen,
+  hasInstance,
+  requiresTaskIds,
+  directReqInfo,
+  nestedReqInfo,
+  collect(DISTINCT anchor) AS anchorsRaw
+
+// Keep row even if there are no anchors (use [NULL])
+WITH
+  gen,
+  hasInstance,
+  requiresTaskIds,
+  directReqInfo,
+  nestedReqInfo,
+  CASE
+    WHEN size(anchorsRaw) > 0 THEN anchorsRaw
+    ELSE [NULL]
+  END AS anchors
+
+UNWIND anchors AS a
+
+// From anchors, derive buildings/spaces/zones:
+// - Buildings directly
+// - Spaces directly, and via zones
+// - Zones directly
+OPTIONAL MATCH (a)-[:isSpaceOf|hasSpace]->(bFromSpace:Building)
+OPTIONAL MATCH (a)-[:hasZone|isZoneOf]->(sFromZone:Space)
+OPTIONAL MATCH (sFromZone)-[:isSpaceOf|hasSpace]->(bFromZSpace:Building)
+
+WITH
+  gen,
+  hasInstance,
+  requiresTaskIds,
+  directReqInfo,
+  nestedReqInfo,
+  collect(DISTINCT CASE WHEN a:Building THEN a.id END) AS directBIds,
+  collect(DISTINCT CASE WHEN a:Space    THEN a.id END) AS directSIds,
+  collect(DISTINCT CASE WHEN a:Zone     THEN a.id END) AS directZIds,
+  collect(DISTINCT bFromSpace.id)   AS bFromSpaceIds,
+  collect(DISTINCT sFromZone.id)    AS sFromZoneIds,
+  collect(DISTINCT bFromZSpace.id)  AS bFromZSpaceIds
+
+// 5) Final aggregation per generic task
+RETURN
+  trim(gen.taskId)               AS genericTaskId,
+  gen.category                   AS genericCategory,
+  coalesce(gen.label, gen.name)  AS genericName,
+  hasInstance,  // now correctly true or false
+  [id IN requiresTaskIds WHERE id IS NOT NULL] AS requiresTaskIds,
+  [info IN (directReqInfo + nestedReqInfo)
+   WHERE info.key IS NOT NULL] AS requirementInfo,
+  // Buildings: direct from anchors, or via space / zone→space
+  [id IN (directBIds + bFromSpaceIds + bFromZSpaceIds)
+   WHERE id IS NOT NULL] AS buildingIds,
+  // Spaces: direct anchors, plus spaces reached from zones
+  [id IN (directSIds + sFromZoneIds)
+   WHERE id IS NOT NULL] AS spaceIds,
+  // Zones: only direct anchors that are zones
+  [id IN directZIds
+   WHERE id IS NOT NULL] AS zoneIds
+ORDER BY genericTaskId;
+
+
+
+// Query to find all devices asscociated with the building and associated spatial entities
+// C′) Devices and their Space/Zone/Building for Lisbon-FCUL-Library, deeper paths
+MATCH (d:Device)
+
+// Device ↔ Space (up to 6 hops via isContainedIn / contains)
+OPTIONAL MATCH (d)-[:isContainedIn*1..6]->(s1:Space)
+OPTIONAL MATCH (d)<-[:contains*1..6]-(s2:Space)
+
+// Device ↔ Zone (up to 6 hops)
+OPTIONAL MATCH (d)-[:isContainedIn*1..6]->(z1:Zone)
+OPTIONAL MATCH (d)<-[:contains*1..6]-(z2:Zone)
+
+// Device ↔ Building (up to 6 hops)
+OPTIONAL MATCH (d)-[:isContainedIn*1..6]->(b1:Building)
+OPTIONAL MATCH (d)<-[:contains*1..6]-(b2:Building)
+
+WITH
+  d,
+  coalesce(s1, s2) AS s,
+  coalesce(z1, z2) AS z,
+  b1, b2
+
+// Space → Building (up to 4 hops)
+OPTIONAL MATCH (s)-[:isSpaceOf|hasSpace*1..4]->(bFromSpace:Building)
+
+// Zone → Space (up to 4 hops)
+OPTIONAL MATCH (z)-[:hasZone|isZoneOf*1..4]->(sFromZone:Space)
+
+// ZoneSpace → Building (up to 4 hops)
+OPTIONAL MATCH (sFromZone)-[:isSpaceOf|hasSpace*1..4]->(bFromZSpace:Building)
+
+WITH
+  d,
+  coalesce(s, sFromZone) AS sFinal,
+  z,
+  coalesce(b1, b2, bFromSpace, bFromZSpace) AS bFinal
+
+WHERE bFinal.id = 'urn:ngsi-ld:Building:Lisbon-FCUL-Library'
+
+RETURN DISTINCT
+  d.id         AS deviceId,
+  labels(d)    AS deviceLabels,
+  sFinal.id    AS spaceId,
+  z.id         AS zoneId,
+  bFinal.id    AS buildingId,
+  properties(d) AS deviceProps
+ORDER BY deviceId
+LIMIT 200;
+
+
+|| Good template but not taking spatialcontext into consideration
+
+
+// 1) Device-type Requirements reachable from generic task A01
+MATCH (root:Task {taskId: 'A01'})
+WHERE root.category IN ['KPI', 'Assessment', 'Service', 'VirtualSensor']
+
+MATCH (root)-[:requires*1..15]->(r:Requirement)
+// in your data, `type` is a LIST, e.g. ["Device"] or ["Building","Zone"]
+WHERE 'Device' IN r.type
+WITH DISTINCT r
+
+// 2) All Devices + their Space / Zone / Building in Lisbon-FCUL-Library
+MATCH (d:Device)
+
+// Device ↔ Space (up to 6 hops)
+OPTIONAL MATCH (d)-[:isContainedIn*1..6]->(s1:Space)
+OPTIONAL MATCH (d)<-[:contains*1..6]-(s2:Space)
+
+// Device ↔ Zone (up to 6 hops)
+OPTIONAL MATCH (d)-[:isContainedIn*1..6]->(z1:Zone)
+OPTIONAL MATCH (d)<-[:contains*1..6]-(z2:Zone)
+
+// Device ↔ Building (up to 6 hops)
+OPTIONAL MATCH (d)-[:isContainedIn*1..6]->(b1:Building)
+OPTIONAL MATCH (d)<-[:contains*1..6]-(b2:Building)
+
+WITH
+  r,
+  d,
+  coalesce(s1, s2) AS s,
+  coalesce(z1, z2) AS z,
+  b1, b2
+
+// Space → Building (up to 4 hops)
+OPTIONAL MATCH (s)-[:isSpaceOf|hasSpace*1..4]->(bFromSpace:Building)
+
+// Zone → Space (up to 4 hops)
+OPTIONAL MATCH (z)-[:hasZone|isZoneOf*1..4]->(sFromZone:Space)
+
+// ZoneSpace → Building (up to 4 hops)
+OPTIONAL MATCH (sFromZone)-[:isSpaceOf|hasSpace*1..4]->(bFromZSpace:Building)
+
+WITH
+  r,
+  d,
+  coalesce(s, sFromZone) AS sFinal,
+  z,
+  coalesce(b1, b2, bFromSpace, bFromZSpace) AS bFinal
+
+// Keep only devices that belong to the target building
+WHERE bFinal.id = 'urn:ngsi-ld:Building:Lisbon-FCUL-Library'
+
+// 3) Match devices to each requirement using measuresProperty / controlsProperty / unit
+WITH
+  r, d, sFinal, z, bFinal,
+  coalesce(r.measuresProperty, []) AS rMeasures,
+  coalesce(r.controlsProperty, []) AS rControls,
+  r.unit                           AS rUnit,
+  coalesce(d.measuresProperty, []) AS dMeasures,
+  coalesce(d.controlsProperty, []) AS dControls,
+  d.unit                           AS dUnit
+
+WHERE
+  // If requirement specifies measuresProperty, at least one must match
+  (size(rMeasures) = 0 OR any(x IN rMeasures WHERE x IN dMeasures)) OR
+  // If requirement specifies controlsProperty, at least one must match
+  (size(rControls) = 0 OR any(x IN rControls WHERE x IN dControls)) AND
+  // If requirement specifies a unit, device.unit must match
+  (rUnit IS NULL OR (dUnit IS NOT NULL AND rUnit = dUnit))
+
+// 4) Aggregate per requirement
+RETURN
+  r.key                       AS requirementKey,
+  properties(r)               AS requirementProps,
+  collect(DISTINCT d.id)      AS deviceIds,
+  collect(DISTINCT sFinal.id) AS spaceIds,
+  collect(DISTINCT z.id)      AS zoneIds,
+  collect(DISTINCT bFinal.id) AS buildingIds
+ORDER BY requirementKey;

@@ -1,0 +1,35 @@
+[
+    {
+        "id": "Assessment:A08:F-V01_Fault-Detection",
+        "type": "Task",
+        "description": "Thermal envelop fault-detection assessment using simulation data as baseline for the Apartment 18",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "Benchmark": {
+                "type": "External",
+                "category": "Reference-Value",
+                "unit": "Wh/m2HDH"
+            },
+            "STEH": {
+                "taskId": "A08:K02-V01",
+                "type": "Task"
+            }
+        },
+        "arguments": {
+            "scope": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ]
+        },
+        "taskId": "A08:F-V01",
+        "name": "Thermal envelope fault-detection assessment of Apartment 18"
+    }
+]

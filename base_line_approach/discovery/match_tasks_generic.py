@@ -3,15 +3,19 @@ import json
 import re
 import os
 import copy
-from typing import List, Dict, Any, Iterable, Tuple, Callable, Optional
-from dataclasses import dataclass, field
 import pandas as pd
-# ========== Prefix Tree (unchanged) ==========
+from typing import List, Dict, Any, Iterable
+
+# ============================================================
+# =============== PREFIX TREE IMPLEMENTATION =================
+# ============================================================
+
 class Node:
     def __init__(self, value):
         self.value = value
         self.children = {}
         self.is_end = False
+
 
 class PrefixTree:
     def __init__(self):
@@ -24,39 +28,6 @@ class PrefixTree:
                 current_node.children[char] = Node(char)
             current_node = current_node.children[char]
         current_node.is_end = True
-    
-    def search(self, word):
-        current_node = self.root
-        for char in word:
-            if char not in current_node.children:
-                return False
-            current_node = current_node.children[char]
-        return current_node.is_end
-
-    def starts_with(self, prefix):
-        current_node = self.root
-        for char in prefix:
-            if char not in current_node.children:
-                return False
-            current_node = current_node.children[char]
-        return True
-    
-    def delete(self, word):
-        def _delete(node, word, index):
-            if index == len(word):
-                if not node.is_end:
-                    return False
-                node.is_end = False
-                return len(node.children) == 0
-            char = word[index]
-            if char not in node.children:
-                return False
-            child_node = node.children[char]
-            if _delete(child_node, word, index + 1):
-                del node.children[char]
-                return len(node.children) == 0
-            return False
-        _delete(self.root, word, 0)
     
     def collect_all_ids(self, node=None) -> list:
         """Traverse the tree and collect all complete words (IDs)."""
@@ -74,18 +45,9 @@ class PrefixTree:
         return all_ids
 
 
-def load_ids_and_insert_into_tree(
-    filename,
-    prefix_tree,
-    sheet_name=0,        
-    id_column="id",
-    strip=True,
-    case=None           
-):
-    # Read only the 'id' column for efficiency
+def load_ids_and_insert_into_tree(filename, prefix_tree, sheet_name=0, id_column="id", strip=True, case=None):
+    """Loads entity IDs from Excel and inserts them into the prefix tree."""
     df = pd.read_excel(filename, sheet_name=sheet_name, usecols=[id_column])
-
-    # Clean and normalize
     s = df[id_column].dropna().astype(str)
     if strip:
         s = s.str.strip()
@@ -93,73 +55,165 @@ def load_ids_and_insert_into_tree(
         s = s.str.upper()
     elif case == "lower":
         s = s.str.lower()
-
-    # Insert unique, non-empty IDs into the trie
     for id_str in s[s.ne("")].drop_duplicates():
         prefix_tree.insert(id_str)
 
-# --- Usage ---
-prefix_tree = PrefixTree()
-load_ids_and_insert_into_tree("/caml/standardized_sato_device.xlsx", prefix_tree, sheet_name=0, id_column="id")
-print("All IDs inserted into the prefix tree.")
+def print_prefix_tree(node, prefix):
+    if node.is_end:
+        print(prefix)
+    for char, child_node in node.children.items():
+        print_prefix_tree(child_node, prefix + char)
 
-# ========== Generalized Rule Framework ==========
-@dataclass
-class RuleSet:
-    """Generic rule definitions for entity matching."""
-    name: str
-    location_patterns: List[str] = field(default_factory=list)
-    entity_patterns: List[str] = field(default_factory=list)
-    measure_patterns: List[str] = field(default_factory=list)
-    custom_rules: List[Callable[[str], bool]] = field(default_factory=list)
-    require_all: bool = True
-    verbose: bool = True
+# ============================================================
+# =============== CONFIGURATION & HELPERS ====================
+# ============================================================
 
-    def compile(self):
-        """Compile regexes."""
-        def compile_group(group: List[str]) -> List[re.Pattern]:
-            return [re.compile(p, re.IGNORECASE) for p in group]
-        self.location_regexes = compile_group(self.location_patterns)
-        self.entity_regexes = compile_group(self.entity_patterns)
-        self.measure_regexes = compile_group(self.measure_patterns)
-
-    def match_location(self, text: str) -> bool:
-        return any(r.search(text) for r in self.location_regexes)
-
-    def match_entity(self, text: str) -> bool:
-        return any(r.search(text) for r in self.entity_regexes)
-
-    def match_measure(self, text: str) -> bool:
-        return any(r.search(text) for r in self.measure_regexes)
-
-    def match_custom(self, text: str) -> bool:
-        return all(fn(text) for fn in self.custom_rules)
-
-    def matches_all(self, text: str) -> bool:
-        """General logical AND combination of all rule categories."""
-        return (
-            self.match_location(text)
-            and self.match_entity(text)
-            and self.match_measure(text)
-            and self.match_custom(text)
-        )
-
-    @classmethod
-    def from_json(cls, path: str) -> "RuleSet":
-        with open(path, "r") as f:
-            data = json.load(f)
-        rs = cls(**data)
-        rs.compile()
-        return rs
+TOKEN = r"(?:^|[^A-Za-z]){tok}(?:[^A-Za-z]|$)"
+REQ_BLOCK_MODE = "all"     #  FIXED: Require all blocks (SpacialContext + TotalLoad)
+VERBOSE = True
 
 
-# ========== Utility Functions ==========
+def collect_all_ids(node):
+    """Recursively collect all entity IDs from a prefix tree."""
+    out = []
+    def dfs(n, path):
+        full_path = path + (getattr(n, "value", "") or "")
+        if getattr(n, "is_end", False):
+            out.append(full_path)
+        for _, child in n.children.items():
+            dfs(child, full_path)
+    dfs(node, "")
+    return out
+
+
+
+
+
+# ============================================================
+# =============== AUTO-DISCOVERY (GENERIC) ===================
+# ============================================================
+
+def extract_tokens_from_tasks(tasks: List[Dict[str, Any]]) -> List[str]:
+    """Dynamically extract all unique string tokens from the 'requires' sections."""
+    tokens = set()
+    for task in tasks:
+        requires = task.get("requires", {})
+        for block in iter_requirement_blocks(requires):
+            for key, val in block.items():
+                if isinstance(val, list):
+                    tokens.update(map(str, val))
+                elif isinstance(val, str):
+                    tokens.add(val)
+                elif isinstance(val, dict):
+                    tokens.update(map(str, val.values()))
+    return list(tokens)
+
+
+def infer_requirement_keys(tasks: List[Dict[str, Any]]) -> set:
+    """Infer what keys appear under 'requires' across all tasks."""
+    keys = set()
+    for t in tasks:
+        req = t.get("requires")
+        for block in iter_requirement_blocks(req):
+            keys.update(block.keys())
+    return keys
+
+
+# ============================================================
+# =============== REQUIREMENT MATCHING (FIXED) ===============
+# ============================================================
+
+def build_requirement_groups(req_details: Dict[str, Any], recognized_keys: set) -> List[List[str]]:
+    """Converts a requirement block into groups of tokens."""
+    groups = []
+    for key, vals in req_details.items():
+        if key not in recognized_keys:
+            continue
+        if not isinstance(vals, list):
+            vals = [vals]
+        groups.append([str(v) for v in vals])
+    return groups
+
+
+def requirement_value_matches(id_str: str, value: str) -> bool:
+    """Normalize separators and check if value appears in the ID."""
+    id_norm = re.sub(r"[^a-z0-9]+", "", id_str.lower())
+    val_norm = re.sub(r"[^a-z0-9]+", "", str(value).lower())
+    return val_norm in id_norm
+
+
+def id_satisfies_requirement_block(id_str: str, req_block: Dict[str, Any], recognized_keys: set) -> bool:
+    """Check if entity ID satisfies all tokens within one requirement block."""
+    groups = build_requirement_groups(req_block, recognized_keys)
+    if not groups:
+        return True
+    for group in groups:
+        if not any(requirement_value_matches(id_str, val) for val in group):
+            return False
+    return True
+
+
+def id_satisfies_requirements(id_str: str, requirements: Any, recognized_keys: set) -> bool:
+    """For each requirement block, check if the entity satisfies its tokens."""
+    blocks = list(iter_requirement_blocks(requirements))
+    if not blocks:
+        return True
+    if REQ_BLOCK_MODE == "all":
+        return all(id_satisfies_requirement_block(id_str, b, recognized_keys) for b in blocks)
+    else:
+        return any(id_satisfies_requirement_block(id_str, b, recognized_keys) for b in blocks)
+
+
+def id_mentions_any_token(id_str: str, tokens: List[str]) -> bool:
+    """Quick prefilter: return True if entity ID contains at least one token."""
+    id_norm = re.sub(r"[^a-z0-9]+", "", id_str.lower())
+    for tok in tokens:
+        tok_norm = re.sub(r"[^a-z0-9]+", "", str(tok).lower())
+        if tok_norm and tok_norm in id_norm:
+            return True
+    return False
+
+
+# ============================================================
+# =============== TASK INSTANCE CREATION =====================
+# ============================================================
+
 def _safe_id_fragment(s: str, max_len: int = 120) -> str:
-    frag = re.sub(r"[^A-Za-z0-9_.:/\-]+", "-", s)
+    frag = re.sub(r"[^A-Za-z0-9_.:/\\-]+", "-", s)
     frag = re.sub(r"-{2,}", "-", frag).strip("-")
-    return frag[:max_len] if frag else "entity"
+    if len(frag) > max_len:
+        frag = frag[:max_len].rstrip("-")
+    return frag or "entity"
+
+
+def add_entity_to_requires(requires: Any, entity_id: str) -> Any:
+    """Insert the matched entity id under 'requires'."""
+    if isinstance(requires, dict):
+        new_req = copy.deepcopy(requires)
+        key = "entityId" if "entityId" not in new_req else "_entityId"
+        new_req[key] = entity_id
+        return new_req
+    if isinstance(requires, list):
+        new_req = copy.deepcopy(requires)
+        new_req.append({"entityId": entity_id})
+        return new_req
+    return {"entityId": entity_id}
+
+
+def make_task_instance(base_task: Dict[str, Any], entity_id: str) -> Dict[str, Any]:
+    """Clone the base task and inject the entity_id."""
+    t = copy.deepcopy(base_task)
+    base_name = t.get("name") or "Task"
+    base_id = t.get("taskId") or (t.get("id") or "T")
+    frag = _safe_id_fragment(entity_id)
+    t["name"] = f"{base_name}  {entity_id}"
+    t["taskId"] = f"{base_id}::{frag}"
+    t["requires"] = add_entity_to_requires(t.get("requires"), entity_id)
+    return t
+
 
 def _unique_path(base_dir: str, filename_no_ext: str) -> str:
+    """Ensure we don't overwrite existing files."""
     path = os.path.join(base_dir, f"{filename_no_ext}.json")
     if not os.path.exists(path):
         return path
@@ -170,28 +224,9 @@ def _unique_path(base_dir: str, filename_no_ext: str) -> str:
             return candidate
         i += 1
 
-def add_entity_to_requires(requires: Any, entity_id: str) -> Any:
-    if isinstance(requires, dict):
-        req = copy.deepcopy(requires)
-        req["entityId"] = entity_id
-        return req
-    if isinstance(requires, list):
-        req = copy.deepcopy(requires)
-        req.append({"entityId": entity_id})
-        return req
-    return {"entityId": entity_id}
-
-def make_task_instance(base_task: Dict[str, Any], entity_id: str) -> Dict[str, Any]:
-    t = copy.deepcopy(base_task)
-    base_name = t.get("name", "Task")
-    base_id = t.get("taskId", "T")
-    frag = _safe_id_fragment(entity_id)
-    t["name"] = f"{base_name}::{entity_id}"
-    t["taskId"] = f"{base_id}::{frag}"
-    t["requires"] = add_entity_to_requires(t.get("requires"), entity_id)
-    return t
 
 def save_task_instance(instance: Dict[str, Any], out_dir: str) -> str:
+    """Save a single task instance to its own JSON file."""
     os.makedirs(out_dir, exist_ok=True)
     base = instance.get("taskId") or instance.get("name") or "task"
     fname = _safe_id_fragment(base)
@@ -200,45 +235,74 @@ def save_task_instance(instance: Dict[str, Any], out_dir: str) -> str:
         json.dump(instance, f, indent=2, ensure_ascii=False)
     return out_path
 
-# ========== Main Matching Logic ==========
-def match_tasks_with_rules(
-    root_node: Node,
-    task_json_path: str,
-    ruleset: RuleSet,
-    out_dir: str = "expanded_tasks"
-):
-    # Collect all entity IDs using the prefix tree
-    prefix_tree = PrefixTree()
-    prefix_tree.root = root_node
-    ids = prefix_tree.collect_all_ids()
+
+# ============================================================
+# =============== MAIN GENERIC DRIVER (FIXED) ================
+# ============================================================
+
+def match_task_requirements(root_node, task_json_path, out_dir="expanded_tasks_per_entity"):
+    """
+    Generic + Fixed task matcher:
+    - Reads any task JSON (with arbitrary 'requires' structure)
+    - Learns requirement keys and tokens automatically
+    - Matches entities per-requirement (normalized & filtered)
+    - Saves one file per matched task-entity instance
+    """
+    all_ids = collect_all_ids(root_node)
 
     with open(task_json_path, "r", encoding="utf-8") as f:
         tasks = json.load(f)
 
+    #  FIX 1: Filter only meaningful semantic keys
+    recognized_keys = {
+        k for k in infer_requirement_keys(tasks)
+        if k.lower() in {
+            "type",
+            "category",
+            "class",
+            "measure",
+            "measuresproperty",
+            "measuredproperty",
+            "controlsproperty"
+        }
+    }
+
+    # Extract all task tokens for quick pre-filtering
+    extracted_tokens = extract_tokens_from_tasks(tasks)
+
+    if VERBOSE:
+        print(f"\nDiscovered requirement keys: {recognized_keys}")
+        print(f"Extracted tokens: {extracted_tokens}\n")
+
     total_saved = 0
+
     for task in tasks:
-        name = task.get("name")
-        if ruleset.verbose:
-            print(f"\nProcessing task: {name}")
+        task_name = task.get("name")
+        task_id = task.get("taskId") or task.get("id")
+        requirements = task.get("requires")
 
-        matched = [i for i in ids if ruleset.matches_all(i)]
-        for mid in matched:
-            instance = make_task_instance(task, mid)
-            save_task_instance(instance, out_dir)
+        if VERBOSE:
+            print(f"\n---\nProcessing Task: {task_name}\nTask ID: {task_id}")
+
+        matched_ids = []
+        for id_str in all_ids:
+            # Optional quick pre-filter
+            if not id_mentions_any_token(id_str, extracted_tokens):
+                continue
+            #  Strong semantic matching
+            if id_satisfies_requirements(id_str, requirements, recognized_keys):
+                matched_ids.append(id_str)
+
+        if not matched_ids:
+            print("No matches found.")
+            continue
+
+        print(f"Matched {len(matched_ids)} entities:")
+        for id_str in matched_ids:
+            instance = make_task_instance(task, id_str)
+            out_path = save_task_instance(instance, out_dir)
             total_saved += 1
-            if ruleset.verbose:
-                print(f"  → Matched entity: {mid}")
+            if VERBOSE:
+                print(f"  → saved: {out_path}")
 
-    print(f"\n Total saved task instances: {total_saved}")
-
-
-
-# ========== Example Default RuleSet (building tasks) ==========
-DEFAULT_RULESET = RuleSet(
-    name="building_default",
-    location_patterns=[r"\b(Building|Zone|Space)\b"],
-    entity_patterns=[r"\bSensor\b"],
-    measure_patterns=[r"\b(Accumulated[-_ ]?Load|Total[-_ ]?Load)\b"],
-    verbose=True
-)
-DEFAULT_RULESET.compile()
+    print(f"\n Saved {total_saved} task instances to: {out_dir}")

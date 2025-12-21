@@ -1,0 +1,30 @@
+[
+    {
+        "id": "Assessment:A22-S2-G1-R-V01_Resource-Use",
+        "type": "Task",
+        "description": "Monthly assessment for the resource use of a boiler.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "CO2Emissions": {
+                "taskId": "A22-K:00006-V01",
+                "type": "Task"
+            },
+            "EnergyCosts": {
+                "taskId": "A22-K:00007-V01",
+                "type": "Task"
+            },
+            "PrimaryDeliveredEnergy": {
+                "taskId": "A22-K:00005-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A22-S2-G1-R-V01",
+        "name": "Monthly assessment for Boiler Resource-Use"
+    }
+]

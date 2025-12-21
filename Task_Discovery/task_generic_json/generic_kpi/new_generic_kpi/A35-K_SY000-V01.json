@@ -1,0 +1,29 @@
+[
+    {
+        "id": "KPI:A35-K:SY000-V01_Specific-Yield",
+        "type": "Task",
+        "description": "Measure how much energy (kWh) is produced for every kWp installed.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "InstalledPeakPower": {
+                "type": "External",
+                "category": "Reference-Value",
+                "unit": "kWp"
+            },
+            "LocalEnergyProduction": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Energy-Production",
+                "unit": "KWH"
+            }
+        },
+        "taskId": "A35-K:SY000-V01",
+        "name": "Specific Yield"
+    }
+]

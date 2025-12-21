@@ -1,0 +1,32 @@
+[
+      {
+        "id": "KPI:A28-K:BP100-V01_Electrical-Peak-Power",
+        "type": "Task",
+        "description": "KPI definition for the electrical peak power in the AHU, takes as input a timeseries of electrical energy use and outputs the electrical peak power over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ElecUse": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Total-Load",
+                "unit": "KWT"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:BP100-V01",
+        "name": "Electrical Peak Power"
+    }
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "id": "VirtualSensor:VA38_unif-V01_Uniformity-Illuminance",
+        "type": "Task",
+        "description": "Illuminance uniformity from illuminance sensors (at least 2) in a zone",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "Illuminance": 
+                {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "Lighting",
+                    "unit": "LUX"
+                }
+            ,
+          "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            }
+        },
+        "arguments": {
+            "scope": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VA38_unif-V01",
+        "name": "Uniformity Illuimance"
+    }
+]

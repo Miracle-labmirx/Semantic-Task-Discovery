@@ -1,0 +1,27 @@
+[
+    {
+        "id": "Assessment:A22-S2-G1-F-V01_Efficiency-Fault-Detection",
+        "type": "Task",
+        "description": "Monthly assessment for the efficiency fault detection (FD) of a boiler.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "EfficiencyFactor": {
+                "taskId": "A22-K:00001-V01",
+                "type": "Task"
+            },
+            "RefEfficiencyFactor": {
+                "type": "External",
+                "category": "Reference-Value",
+                "unit": "%"
+            }
+        },
+        "taskId": "A22-S2-G1-F-V01",
+        "name": "Monthly Boiler assessment for Efficiency Fault Detection"
+    }
+]

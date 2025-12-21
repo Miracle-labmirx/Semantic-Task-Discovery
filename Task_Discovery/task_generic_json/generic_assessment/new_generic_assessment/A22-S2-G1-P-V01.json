@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Assessment:A22-S2-G1-P-V01_Efficiency-Performance",
+        "type": "Task",
+        "description": "Monthly assessment for the efficiency performance of a boiler.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "EfficiencyFactor": {
+                "taskId": "A22-K:00001-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A22-S2-G1-P-V01",
+        "name": "Monthly assessment for Boiler Performance"
+    }
+]

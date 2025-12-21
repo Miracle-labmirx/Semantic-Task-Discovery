@@ -1,0 +1,30 @@
+    [
+        {
+            "id": "Assessment:A28-S3-G-P-V01_Heat-Exchanger-Efficiency",
+            "type": "Task",
+            "description": "Assessments: Assess the heat exchanger efficiency, takes as inputs KPI heat exchanger efficiency and rotary heat exchanger rotation speed, and outputs the heat exchanger efficiency for each difined timeinterval",
+            "category": "Assessment",
+            "periodicity": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ],
+            "requires": {
+                "KPI_res": {
+                    "taskId": "A28-K:SC130-V01",
+                    "type": "Task"
+                }
+            },
+            "arguments": {
+                "scope": [
+                    "@daily",
+                    "@weekly",
+                    "@monthly",
+                    "@yearly"
+                ]
+            },
+            "taskId": "A28-S3-G-P-V01",
+            "name": "AHU Performance assessments"
+        }
+    ]

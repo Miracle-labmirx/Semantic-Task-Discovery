@@ -1,0 +1,25 @@
+[
+    {
+        "id": "Assessment:A13-V01_Occupation",
+        "type": "Task",
+        "description": "A13 Occupancy assessment for the Atrium Center Zone.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "SpacialContext": {
+                "type": "Building"
+            },
+            "TotalEstimate": {
+                "taskId": "A13-K03-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A13-V01",
+        "name": "Occupancy estimate for Atrium Center zone."
+    }
+]

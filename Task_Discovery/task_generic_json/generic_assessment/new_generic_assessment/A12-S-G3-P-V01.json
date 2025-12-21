@@ -1,0 +1,22 @@
+    [
+        {
+            "id": "Assessment:A12-S-G3-P-V01_IAQ-CO2-Report:Hourly",
+            "type": "Task",
+            "description": "Hourly C02 concentration report.",
+            "category": "Assessment",
+            "periodicity": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ],
+            "requires": {
+                "Classification": {
+                    "taskId": "A12-KIE5-V01",
+                    "type": "Task"
+                }
+            },
+            "taskId": "A12-S-G3-P-V01",
+            "name": "Hourly IAQ CO2 concentration report for Floor 3, Room 1.257"
+        }
+    ]

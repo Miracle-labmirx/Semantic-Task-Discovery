@@ -1,0 +1,35 @@
+[
+    {
+        "id": "VirtualSensor:A43-VS:08-v1_Average-Mass-Temperature",
+        "type": "Task",
+        "description": "Average of Mass Temperature sensors at the floor and ceilling.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "MassTemp": [
+                {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "Mass-Temperature",
+                    "unit": "CEL"
+                }
+              
+            ],
+          "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            }
+        },
+        "taskId": "A43-VS:08-v1",
+        "name": "Average Mass Temperature Atrium"
+    }
+]

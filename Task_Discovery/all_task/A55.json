@@ -1,0 +1,28 @@
+[
+    {
+        "id": ":Fridge:Assessment:A55_Anomaly-Detection:Daily",
+        "type": "Task",
+        "description": "Detects anomalies in the daily energy consumption of the fridge.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "energy_sensor": {
+                "category": "Fridge",
+                "type": "Device"
+            },
+            "target_device": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "ActiveEnergyConsumed",
+                "unit": "WHR"
+            }
+        },
+        "taskId": "A55",
+        "name": "Daily Anomaly Detection analysis for Fridge"
+    }
+]

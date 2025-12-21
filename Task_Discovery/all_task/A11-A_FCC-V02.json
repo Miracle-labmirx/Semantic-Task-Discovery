@@ -1,0 +1,38 @@
+    [
+        {
+            "id": "Assessment:A11-A:FCC-V02_Fanger-Comfort-Classification",
+            "type": "Task",
+            "description": "Thermal comfort category based on Fanger method.",
+            "category": "Assessment",
+            "periodicity": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ],
+            "requires": {
+                "temp_dev": {
+                    "taskId": [
+                        "VS01-V01",
+                        "VS02-V01"
+                    ],
+                    "type": "Task"
+                }
+            },
+            "arguments": {
+                "above_cat_3": 26,
+                "below_cat_3": 19,
+                "cat_2": 24,
+                "low_cat_3": 20,
+                "upper_cat_3": 25,
+                "scope": [
+                    "@daily",
+                    "@weekly",
+                    "@monthly",
+                    "@yearly"
+                ]
+            },
+            "taskId": "A11-A:FCC-V02",
+            "name": "Fanger thermal comfort category result."
+        }
+    ]

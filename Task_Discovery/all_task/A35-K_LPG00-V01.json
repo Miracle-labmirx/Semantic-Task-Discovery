@@ -1,0 +1,24 @@
+[
+    {
+        "id": "KPI:A35-K:LPG00-V01_Local-Production-to-Grid",
+        "type": "Task",
+        "description": "Measure the energy locally produced by the PV unit injected in the grid",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ActiveEnergyInjected": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Grid-Feed-in",
+                "unit": "KWH"
+            }
+        },
+        "taskId": "A35-K:LPG00-V01",
+        "name": "Local Production to Grid"
+    }
+]

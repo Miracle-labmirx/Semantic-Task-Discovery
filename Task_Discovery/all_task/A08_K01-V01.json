@@ -1,0 +1,36 @@
+[
+    {
+        "id": "KPI:A08:K01-V01_Heating-Degree-Hours",
+        "type": "Task",
+        "description": "Heating degree hours of Building",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "AvgTemp": {
+                "type": "Task",
+                "taskId": "VS02-V01"
+            },
+            "OutdoorTemp": {
+                "type": "External",
+                "category": "WeatherData",
+                "measuresProperty": "Temperature",
+                "unit": "CEL"
+            }
+        },
+        "arguments": {
+            "scope": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ]
+        },
+        "taskId": "A08:K01-V01",
+        "name": "Heating degree hours of a Building"
+    }
+]

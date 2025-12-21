@@ -1,0 +1,32 @@
+[
+    {
+        "id": "VirtualSensor:VS06-V01_Airflow-RTU",
+        "type": "Task",
+        "description": "Atrium RTU North Supply Airflow rate.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "AirVelocity_North": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Humidity",
+                "unit": "P1"
+            }
+        },
+        "arguments": {
+            "scope": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VS06-V01",
+        "name": "Atrium RTU North Supply Airflow rate"
+    }
+]

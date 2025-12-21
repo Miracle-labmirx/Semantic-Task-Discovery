@@ -1,0 +1,39 @@
+[
+    {
+        "id": "KPI:A08:K02-V01_Specific-Thermal-Energy-Heating",
+        "type": "Task",
+        "description": "Specific thermal energy for heating supplied to the Apartment 18",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "HDH": {
+                "type": "Task",
+                "taskId": "A08:K01-V01"
+            },
+            "HeatingSupply": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Heating-Energy",
+                "unit": "kWh"
+            },
+            "SpatialContext": {
+                "type": "Building"
+            }
+        },
+        "arguments": {
+            "scope": [
+                "@daily",
+                "@weekly",
+                "@monthly",
+                "@yearly"
+            ]
+        },
+        "taskId": "A08:K02-V01",
+        "name": "Specific thermal energy for heating supplied to the Apartment 18"
+    }
+]

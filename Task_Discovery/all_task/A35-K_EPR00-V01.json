@@ -1,0 +1,29 @@
+[
+    {
+        "id": "KPI:A35-K:EPR00-V01_Expected-Performance-Ratio",
+        "type": "Task",
+        "description": "Evaluate performance by quantifying the ratio of the actual and theoretically possible energy outputs.",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ProducedEnergy": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Energy-Production",
+                "unit": "KWH"
+            },
+            "YearlyExpectedEnergyOutput": {
+                "type": "External",
+                "category": "Reference-Value",
+                "unit": "kWh"
+            }
+        },
+        "taskId": "A35-K:EPR00-V01",
+        "name": "Expected Performance Ratio"
+    }
+]

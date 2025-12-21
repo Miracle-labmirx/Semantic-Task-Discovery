@@ -1,0 +1,32 @@
+[
+       {
+        "id": "KPI:A28-K:BP100-V03_Cooling-Peak-Power",
+        "type": "Task",
+        "description": "KPI definition for the cooling peak power in the AHU, takes as input a timeseries of electrical energy use for Cooling device and outputs the electrical peak power over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ElecUse": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Energy-Consumed-Heating-Coil",
+                "unit": "WHR"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:BP100-V03",
+        "name": "Cooling Peak Power"
+    } 
+]

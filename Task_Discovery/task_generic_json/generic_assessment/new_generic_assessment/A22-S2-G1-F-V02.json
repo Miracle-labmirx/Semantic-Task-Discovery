@@ -1,0 +1,27 @@
+[
+    {
+        "id": "Assessment:A22-S2-G1-F-V02_Load-Fault-Detection",
+        "type": "Task",
+        "description": "Monthly Assessment for the load fault detection (FD) of a boiler.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "ActualLoad": {
+                "taskId": "A22-K:00002-V01",
+                "type": "Task"
+            },
+            "RefLoad": {
+                "type": "External",
+                "category": "Reference-Value",
+                "unit": "kW"
+            }
+        },
+        "taskId": "A22-S2-G1-F-V02",
+        "name": "Monthly assessment for Load Fault Detection of Boiler"
+    }
+]

@@ -1,0 +1,38 @@
+[
+        {
+        "id": "KPI:A28-K:SC000-V04_Max-Supply-Temperature-Deviation",
+        "type": "Task",
+        "description": "KPI definition for the max supply temperature deviation in the AHU, takes as input a timeseries of supply temperature and supply temperature setpoints and outputs the max supply temperature deviation over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "SupTemp": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Temperature-Air-Supply",
+                "unit": "CEL"
+            },
+            "SupTempSetp": {
+                "type": "Device",
+                "category": "Actuator",
+                "controlsProperty": "Setpoint-Temperature-Air-Supply",
+                "unit": "CEL"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:SC000-V04",
+        "name": "Max Supply Temperature Deviation"
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "id": "Aalborg-Office:AHU_KOMF01:Service-Instance_Heat-Exchanger-Efficiency-Degradation",
+        "type": "Task",
+        "description": "Heat Exchanger Efficiency Degradation of the AHU",
+        "category": "Service-Instance",
+        "periodicity": "0 0 * * 7",
+        "requires": {
+            "FlowExh": {
+                "id": "Aalborg-Office:HVAC:Sensor_Exhaust-Fan-Flow",
+                "type": "Device"
+            },
+            "FlowSup": {
+                "id": "Aalborg-Office:HVAC:Sensor_Supply-Fan-Flow",
+                "type": "Device"
+            },
+            "HCOpening": {
+                "id": "Aalborg-Office:HVAC:Actuator_Position-Heating-Coil-Motorvalve",
+                "type": "Device"
+            },
+            "HERotSignal": {
+                "id": "Aalborg-Office:HVAC:Sensor_Rotation-Speed",
+                "type": "Device"
+            },
+            "TempExh": {
+                "id": "Aalborg-Office:HVAC:Sensor_Exhaust-Fan-Temperature",
+                "type": "Device"
+            },
+            "TempExt": {
+                "id": "Aalborg-Office:HVAC:Sensor_Temperature-Extraction",
+                "type": "Device"
+            },
+            "TempIntake": {
+                "id": "Aalborg-Office:HVAC:Sensor_Temperature-Intake",
+                "type": "Device"
+            },
+            "TempSup": {
+                "id": "Aalborg-Office:HVAC:Sensor_Temperature-Air-Supply",
+                "type": "Device"
+            },
+            "TempSupSP": {
+                "id": "Aalborg-Office:HVAC:Actuator_Setpoint-Temperature-Air-Supply",
+                "type": "Device"
+            }
+        },
+        "validFrom": "1970-01-01T00:00:00Z",
+        "validTo": "1970-01-01T00:00:00Z",
+        "dateCreated": "2024-09-13T22:18:41Z",
+        "dateObserved": "1970-01-01T00:00:00Z",
+        "arguments": {
+            "c_p": 1006,
+            "historical_time": "1 year",
+            "resample_time": "5 minutes",
+            "startup_time": "10 minutes",
+            "step_size_degrees": "2"
+        },
+        "dateModified": "1970-01-01T00:00:00Z",
+        "taskId": "S34-C-G-S04",
+        "taskValue": 0,
+        "name": "Heat Exchanger Efficiency Degradation"
+    }
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "id": "VirtualSensor:VS12-V01_Average-Humidity",
+        "type": "Task",
+        "description": "Average of Relative Humidity sensors at different high.",
+        "category": "VirtualSensor",
+        "periodicity": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "RH": [
+                {
+                    "type": "Device",
+                    "category": "Sensor",
+                    "measuresProperty": "Humidity",
+                    "unit": "P1"
+                }
+            ],
+            "SpacialContext": {
+                "type": [
+                    "Building",
+                    "Zone",
+                    "Space"
+                ],
+                "area": true
+            }
+        },
+        "arguments": {
+            "scope": [
+            "@hourly",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ]
+        },
+        "taskId": "VS12-V01",
+        "name": "Average Relative Humidity"
+    }
+]

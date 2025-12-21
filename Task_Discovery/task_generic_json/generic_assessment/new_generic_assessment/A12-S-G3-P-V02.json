@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Assessment:A12-S-G3-P-V02_IAQ-RH-Report:Daily",
+        "type": "Task",
+        "description": "Daily Relative Humidity concentration report.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "Classification": {
+                "taskId": "A12-KIE6-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A12-S-G3-P-V02",
+        "name": "Daily IAQ RH concentration report for Atrium Center Zone"
+    }
+]

@@ -1,0 +1,44 @@
+[
+        {
+        "id": "KPI:A28-K:SC500-V01_specific_electicity_use",
+        "type": "Task",
+        "description": "KPI definition for the specific electricity use for the AHU, takes as input a timeseries of supply air flow, extracion air flow, and electricity use and outputs the specific electricity use over the entire timeseries as a float",
+        "category": "KPI",
+        "requires": {
+            "ElecUse": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Total-Load",
+                "unit": "KWH"
+            },
+            "ExtFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Air-Flow-Extraction",
+                "unit": "MQH"
+            },
+            "SupFlow": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Air-Flow-Supply",
+                "unit": "MQH"
+            }
+        },
+        "arguments": {
+            "scope": {
+                "type": "enum",
+                "values": [
+                    "1 minute",
+                    "5 minutes",
+                    "15 minutes",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "yearly"
+                ]
+            }
+        },
+        "taskId": "A28-K:SC500-V01",
+        "name": "Specific Electricity Use"
+    }
+]

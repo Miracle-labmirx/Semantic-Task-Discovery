@@ -1,0 +1,22 @@
+[
+    {
+        "id": "Assessment:A22-S2-G1-F-V03_Energy-Fault-Detection",
+        "type": "Task",
+        "description": "Monthly assessment for the energy fault detection (FD) of a boiler.",
+        "category": "Assessment",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "EnergyProduced": {
+                "taskId": "A22-K:00003-V01",
+                "type": "Task"
+            }
+        },
+        "taskId": "A22-S2-G1-F-V03",
+        "name": "Monthly assessment for Energy Fault Detection"
+    }
+]

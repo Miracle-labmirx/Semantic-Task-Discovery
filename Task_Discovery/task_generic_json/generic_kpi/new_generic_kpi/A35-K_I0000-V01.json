@@ -1,0 +1,28 @@
+[
+    {
+        "id": "KPI:A35-K:I0000-V01_Energy-Produced-Income",
+        "type": "Task",
+        "description": "Measure the income of the energy produced locally from the PV injected into the grid (not self-consumed).",
+        "category": "KPI",
+        "periodicity": [
+            "@daily",
+            "@weekly",
+            "@monthly",
+            "@yearly"
+        ],
+        "requires": {
+            "EletricityPrice": {
+                "type": "External",
+                "category": "DayAheadPrices"
+            },
+            "EnergyInjected": {
+                "type": "Device",
+                "category": "Sensor",
+                "measuresProperty": "Grid-Feed-in",
+                "unit": "KWH"
+            }
+        },
+        "taskId": "A35-K:I0000-V01",
+        "name": "Income"
+    }
+]
